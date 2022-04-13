@@ -1,0 +1,22 @@
+[package]
+name = "near_events"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "near_events"
+path = "src/lib.rs"
+
+[[bin]]
+name = "near_events_sandbox"
+path = "src/main.rs"
+
+[dependencies]
+# TODO: make sure that versions are working together with NEAR SDK
+near-sdk = "4.0.0-pre.7"
+serde_json = { version = "1.0.59", features = ["preserve_order"] }
+near-event-data-log-macro = { path = "../near-event-data-log-macro" }
+
+# [features]
+# ordered = ["serde_json/preserve_order"]

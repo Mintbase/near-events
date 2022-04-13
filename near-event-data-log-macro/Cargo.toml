@@ -1,0 +1,15 @@
+[package]
+name = "near-event-data-log-macro"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "near_event_data_log_macro"
+path = "src/lib.rs"
+proc-macro = true
+
+[dependencies]
+syn = { version = "1.0.82", features = ["full", "extra-traits"] }
+quote = "1.0.10"
+itertools = "0.10.3"
+proc-macro2 = "1.0.37"

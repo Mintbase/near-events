@@ -1,0 +1,2 @@
+[workspace]
+members = ["near-events", "near-event-data-log-macro"]
