@@ -1,10 +1,10 @@
 [package]
-name = "near-event-data-log-macro"
+name = "near-event-data-macro"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "near_event_data_log_macro"
+name = "near_event_data_macro"
 path = "src/lib.rs"
 proc-macro = true
 

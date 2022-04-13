@@ -1,16 +1,15 @@
 [package]
-name = "near-event-data-log-macro"
+name = "proc-macro-support"
 version = "0.1.0"
 edition = "2021"
 
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
-name = "near_event_data_log_macro"
+name = "proc_macro_support"
 path = "src/lib.rs"
-proc-macro = true
 
 [dependencies]
 syn = { version = "1.0.82", features = ["full", "extra-traits"] }
-quote = "1.0.10"
+# quote = "1.0.10"
 itertools = "0.10.3"
 proc-macro2 = "1.0.37"
-proc-macro-support = { path = "../proc-macro-support" }

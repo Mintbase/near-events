@@ -11,14 +11,17 @@
 //! ## TODO
 //!
 //! - [x] Create event string from an event data log
-//! - [] Create event string from event data
+//! - [x] Create event string from an event data vector (needs to be wrapped in
+//!       tuple struct)
 //! - [] Support for deserialization for indexers
 //!   - [] Deserialization code mustn't be wasm'ed for size reasons
+//! - [] `emit_event` on the traits, but test for size bloat first
 //!
 
 use near_sdk::serde::Serialize;
 
 pub use near_event_data_log_macro::near_event_data_log;
+pub use near_event_data_macro::near_event_data;
 
 pub fn serialize<T: Serialize>(
     standard: &str,
@@ -39,7 +42,9 @@ pub trait NearEventDataLog {
     fn serialize_event(&self) -> String;
 }
 
-pub struct NearEventData<T: NearEventDataLog>(Vec<T>);
+pub trait NearEventData {
+    fn serialize_event(self) -> String;
+}
 
 #[cfg(test)]
 mod tests {
@@ -54,13 +59,28 @@ mod tests {
         foo: String,
     }
 
+    #[near_event_data(
+        standard = "nepXXX",
+        version = "1.0.0",
+        event = "test_event"
+    )]
+    struct TestEventLogs(Vec<TestEventLog>);
+
     const EVENT_STR: &str = r#"EVENT_JSON:{"standard":"nepXXX","version":"1.0.0","event":"test_event","data":[{"foo":"bar"}]}"#;
 
     #[test]
-    fn correct_serialization() {
+    fn data_log_serializes() {
         let log = TestEventLog {
             foo: "bar".to_string(),
         };
         assert_eq!(log.serialize_event(), EVENT_STR);
+    }
+
+    #[test]
+    fn data_serializes() {
+        let logs = TestEventLogs(vec![TestEventLog {
+            foo: "bar".to_string(),
+        }]);
+        assert_eq!(logs.serialize_event(), EVENT_STR);
     }
 }

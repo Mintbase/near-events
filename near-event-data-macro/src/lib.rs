@@ -3,7 +3,7 @@ use proc_macro2::Span;
 use proc_macro_support::*;
 
 #[proc_macro_attribute]
-pub fn near_event_data_log(
+pub fn near_event_data(
     macro_args: TokenStream,
     input: TokenStream,
 ) -> TokenStream {
@@ -18,10 +18,11 @@ pub fn near_event_data_log(
 
     // implement direct log -> event serialization
     let event_impl = quote::quote_spanned! {Span::call_site()=>
-        impl NearEventDataLog for #name {
-            fn serialize_event(&self) -> String {
-                // TODO: remove std::Vec from this?
-                serialize(#standard, #version, #event, vec![self])
+        impl NearEventData for #name {
+            fn serialize_event(self) -> String {
+                // This implicitly assumes a tuple struct with its first member
+                // being a vector
+                serialize(#standard, #version, #event, self.0)
             }
         }
     };

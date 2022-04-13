@@ -1,2 +1,7 @@
 [workspace]
-members = ["near-events", "near-event-data-log-macro"]
+members = [
+  "near-events",
+  "near-event-data-log-macro",
+  "near-event-data-macro",
+  "proc-macro-support",
+]

@@ -1,0 +1,3 @@
+[alias]
+unit = "test -p near_events --tests '*'"
+lint = "clippy -- -D warnings"

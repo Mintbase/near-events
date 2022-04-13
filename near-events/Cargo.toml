@@ -8,15 +8,9 @@ edition = "2021"
 name = "near_events"
 path = "src/lib.rs"
 
-[[bin]]
-name = "near_events_sandbox"
-path = "src/main.rs"
-
 [dependencies]
-# TODO: make sure that versions are working together with NEAR SDK
+# TODO: make sure that versions are working together with mintbase-deps
 near-sdk = "4.0.0-pre.7"
 serde_json = { version = "1.0.59", features = ["preserve_order"] }
 near-event-data-log-macro = { path = "../near-event-data-log-macro" }
-
-# [features]
-# ordered = ["serde_json/preserve_order"]
+near-event-data-macro = { path = "../near-event-data-macro" }
