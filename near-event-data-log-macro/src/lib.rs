@@ -20,8 +20,10 @@ pub fn near_event_data_log(
     let event_impl = quote::quote_spanned! {Span::call_site()=>
         impl NearEventDataLog for #name {
             fn serialize_event(&self) -> String {
-                // TODO: remove std::Vec from this?
-                serialize(#standard, #version, #event, vec![self])
+                let data = serde_json::Value::Array(
+                    vec![serde_json::value::to_value(self).unwrap()]
+                );
+                serialize_from_value(#standard, #version, #event, data)
             }
         }
     };

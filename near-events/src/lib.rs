@@ -13,21 +13,24 @@
 //! - [x] Create event string from an event data log
 //! - [x] Create event string from an event data vector (needs to be wrapped in
 //!       tuple struct)
+//! - [x] Replace generics with serde_json::Value
 //! - [] Support for deserialization for indexers
 //!   - [] Deserialization code mustn't be wasm'ed for size reasons
 //! - [] `emit_event` on the traits, but test for size bloat first
+//! - [] use no_std
+//! - [] use a lightweight serde clone
 //!
 
-use near_sdk::serde::Serialize;
+// use near_sdk::serde::Serialize;
 
 pub use near_event_data_log_macro::near_event_data_log;
 pub use near_event_data_macro::near_event_data;
 
-pub fn serialize<T: Serialize>(
+pub fn serialize_from_value(
     standard: &str,
     version: &str,
     event: &str,
-    data: Vec<T>,
+    data: serde_json::Value,
 ) -> String {
     let json = serde_json::json!({
         "standard": standard,
@@ -48,6 +51,8 @@ pub trait NearEventData {
 
 #[cfg(test)]
 mod tests {
+    use near_sdk::serde::Serialize;
+
     use super::*;
 
     #[near_event_data_log(

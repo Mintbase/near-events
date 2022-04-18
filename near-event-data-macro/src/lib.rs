@@ -20,9 +20,8 @@ pub fn near_event_data(
     let event_impl = quote::quote_spanned! {Span::call_site()=>
         impl NearEventData for #name {
             fn serialize_event(self) -> String {
-                // This implicitly assumes a tuple struct with its first member
-                // being a vector
-                serialize(#standard, #version, #event, self.0)
+                let data = serde_json::value::to_value(self).unwrap();
+                serialize_from_value(#standard, #version, #event, data)
             }
         }
     };
