@@ -12,7 +12,7 @@ pub fn near_event_data(
 
     // add additional attributes
     let serde_attrs = quote::quote_spanned! {Span::call_site()=>
-        #[derive(Serialize)]
+        #[derive(Serialize, Deserialize)]
         #[serde(crate = "near_sdk::serde")]
     };
 

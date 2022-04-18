@@ -12,7 +12,7 @@ pub fn near_event_data_log(
 
     // add additional attributes
     let serde_attrs = quote::quote_spanned! {Span::call_site()=>
-        #[derive(Serialize)]
+        #[derive(Serialize, Deserialize)]
         #[serde(crate = "near_sdk::serde")]
     };
 
@@ -20,9 +20,7 @@ pub fn near_event_data_log(
     let event_impl = quote::quote_spanned! {Span::call_site()=>
         impl NearEventDataLog for #name {
             fn serialize_event(&self) -> String {
-                let data = serde_json::Value::Array(
-                    vec![serde_json::value::to_value(self).unwrap()]
-                );
+                let data = serde_json::json!([self]);
                 serialize_from_value(#standard, #version, #event, data)
             }
         }
