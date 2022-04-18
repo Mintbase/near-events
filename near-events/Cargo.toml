@@ -14,3 +14,8 @@ near-sdk = "4.0.0-pre.7"
 serde_json = { version = "1.0.59", features = ["preserve_order"] }
 near-event-data-log-macro = { path = "../near-event-data-log-macro" }
 near-event-data-macro = { path = "../near-event-data-macro" }
+
+[features]
+ser = []
+de = []
+default = []

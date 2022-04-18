@@ -12,12 +12,17 @@ pub fn near_event_data(
 
     // add additional attributes
     let serde_attrs = quote::quote_spanned! {Span::call_site()=>
-        #[derive(Serialize, Deserialize)]
-        #[serde(crate = "near_sdk::serde")]
+        #[cfg_attr(feature = "ser", derive(Serialize))]
+        #[cfg_attr(feature = "de", derive(Deserialize))]
+        #[cfg_attr(
+            any(feature = "ser", feature = "de"),
+            serde(crate = "near_sdk::serde")
+        )]
     };
 
     // implement direct log -> event serialization
     let event_impl = quote::quote_spanned! {Span::call_site()=>
+        #[cfg(feature = "ser")]
         impl NearEventData for #name {
             fn serialize_event(self) -> String {
                 let data = serde_json::value::to_value(self).unwrap();
