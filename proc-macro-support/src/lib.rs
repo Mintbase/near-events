@@ -37,6 +37,7 @@ pub fn parse_typedef(
     let mut attrs = vec![];
     let mut typedef = vec![];
     let mut started_def = false;
+    // let mut got_initdef = false;
 
     // get attributes
     while !started_def {
@@ -46,6 +47,28 @@ pub fn parse_typedef(
             {
                 typedef.push(TokenTree::Ident(ident));
                 started_def = true;
+                // got_initdef = true;
+            }
+            Some(TokenTree::Ident(ident))
+                if ident.to_string().as_str() == "pub" =>
+            {
+                let mut got_init = false;
+                typedef.push(TokenTree::Ident(ident));
+                started_def = true;
+
+                while !got_init {
+                    match input_iter.next() {
+                        Some(TokenTree::Ident(ident))
+                            if ["struct", "enum"]
+                                .contains(&ident.to_string().as_str()) =>
+                        {
+                            typedef.push(TokenTree::Ident(ident));
+                            got_init = true;
+                        }
+                        Some(token) => typedef.push(token),
+                        None => panic!("Cannot parse unfinished typedef",),
+                    }
+                }
             }
             Some(token) => attrs.push(token),
             None => panic!("Cannot parse unfinished typedef",),

@@ -23,10 +23,10 @@ pub fn near_event_data(
     // implement direct log -> event serialization
     let event_impl = quote::quote_spanned! {Span::call_site()=>
         #[cfg(feature = "ser")]
-        impl NearEventData for #name {
+        impl #name {
             fn serialize_event(self) -> String {
-                let data = serde_json::value::to_value(self).unwrap();
-                serialize_from_value(#standard, #version, #event, data)
+                let data = near_sdk::serde_json::value::to_value(self).unwrap();
+                near_events::serialize_from_value(#standard, #version, #event, data)
             }
         }
     };
