@@ -64,25 +64,17 @@ pub fn serialize_from_value(
 #[cfg(feature = "de")]
 pub fn partial_deserialize_event(
     event_json: &str,
-) -> (String, String, String, serde_json::Value) {
+) -> Option<(String, String, String, serde_json::Value)> {
     use std::str::FromStr;
     let event_json = event_json.strip_prefix("EVENT_JSON:").unwrap();
     let object = serde_json::Value::from_str(event_json.trim_start()).unwrap();
 
-    let standard = opt_value_to_string(object.get("standard"));
-    let version = opt_value_to_string(object.get("version"));
-    let event = opt_value_to_string(object.get("event"));
+    let standard = object.get("standard")?.as_str()?.to_string();
+    let version = object.get("version")?.as_str()?.to_string();
+    let event = object.get("event")?.as_str()?.to_string();
     let data = object.get("data").unwrap();
 
-    (standard, version, event, data.clone())
-}
-
-#[cfg(feature = "de")]
-fn opt_value_to_string(opt_v: Option<&serde_json::Value>) -> String {
-    opt_v
-        .and_then(|v| v.as_str())
-        .map(|v| v.to_string())
-        .unwrap()
+    Some((standard, version, event, data.clone()))
 }
 
 #[cfg(all(test, feature = "de", feature = "ser"))]
@@ -145,7 +137,7 @@ mod tests {
 
     fn extract_inner_data(event_json: String) -> String {
         let (standard, version, event, data) =
-            partial_deserialize_event(&event_json);
+            partial_deserialize_event(&event_json).unwrap();
 
         println!("({}, {}, {})", standard, version, event);
         match (standard.as_str(), version.as_str(), event.as_str()) {
