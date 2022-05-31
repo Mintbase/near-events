@@ -24,7 +24,7 @@ pub fn near_event_data(
     let event_impl = quote::quote_spanned! {Span::call_site()=>
         #[cfg(feature = "ser")]
         impl #name {
-            fn serialize_event(self) -> String {
+            pub fn serialize_event(self) -> String {
                 let data = near_sdk::serde_json::value::to_value(self).unwrap();
                 near_events::serialize_from_value(#standard, #version, #event, data)
             }
